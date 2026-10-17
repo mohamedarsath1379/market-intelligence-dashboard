@@ -1,15 +1,33 @@
 import sys, pathlib
-from datetime import datetime, timezone, timedelta
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+
+from datetime import datetime, timezone, timedelta
 
 import pandas as pd
 import streamlit as st
 from src.db import get_conn, load_config
 
 
+@st.cache_resource(show_spinner="First start: building market data (1-2 minutes)...")
+def ensure_data():
+    """If the database is empty (fresh cloud start), build it once."""
+    conn = get_conn()
+    try:
+        n = conn.execute("SELECT COUNT(*) FROM gold_returns").fetchone()[0]
+    except Exception:
+        n = 0
+    conn.close()
+    if n == 0:
+        from src import pipeline
+        pipeline.main()      # no .env on the cloud, so Telegram is skipped
+    return True
+
+
+ensure_data()
+
+
 @st.cache_data(ttl=600)
 def q(sql, params=()):
-    
     conn = get_conn()
     try:
         return pd.read_sql(sql, conn, params=params)
@@ -27,6 +45,7 @@ def index_symbol(name):
 
 def latest_date():
     return q("SELECT MAX(date) AS d FROM gold_returns")["d"][0]
+
 
 def data_banner():
     ist = datetime.now(timezone(timedelta(hours=5, minutes=30)))
