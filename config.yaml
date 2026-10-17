@@ -1,0 +1,41 @@
+indices:
+  NIFTY50:
+    yf_symbol: "^NSEI"
+    constituents_url: "https://www.niftyindices.com/IndexConstituent/ind_nifty50list.csv"
+  NIFTYPHARMA:
+    yf_symbol: "^CNXPHARMA"
+    constituents_url: "https://www.niftyindices.com/IndexConstituent/ind_niftypharmalist.csv"
+
+history_start: "2022-01-01"
+db_path: "data/market.db"
+
+thresholds:
+  breakout_volume_multiple: 1.5
+  trend_sma_fast: 20
+  trend_sma_slow: 50
+  
+backtest:
+  hold_days: 5
+  stop_loss_pct: 3.0
+  cost_pct_per_side: 0.1
+  breakout_buffer_pct: 0.0  
+
+analytics:
+  trend_flat_pct: 0.1
+  trend_min_votes: 4
+  narrow_top_n: 3
+  narrow_share_pct: 50
+  narrow_min_move_pct: 0.2
+  atr_window: 14
+  roc_window: 10
+  volume_window: 20  
+  weight_mode: backcast
+  narrow_ratio: 1.5  
+  broad_index: NIFTY50
+  rs_periods: [1, 5, 20]
+  rs_vol_window: 60
+  rs_history_days: 100000
+  rs_z_threshold: 0.5
+  retest_window: 5
+  retest_tolerance_pct: 0.3
+  candidate_min_score: 4  

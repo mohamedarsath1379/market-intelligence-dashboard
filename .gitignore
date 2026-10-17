@@ -1,0 +1,8 @@
+venv/
+.env
+data/market.db
+data/raw/prices_*.csv
+__pycache__/
+.vscode/
+python
+setup_project.py
